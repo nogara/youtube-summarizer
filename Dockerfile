@@ -20,5 +20,9 @@ RUN poetry config virtualenvs.create false && poetry install
 # Copy project files
 COPY . /code/
 
-# Run the application
-CMD ["streamlit", "run", "app.py"]
+# Expose the port streamlit runs on
+EXPOSE 8501
+
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
