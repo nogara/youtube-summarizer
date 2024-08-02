@@ -31,7 +31,8 @@ def get_transcript(youtube_url):
     full_transcript = " ".join([part['text'] for part in transcript.fetch()])
     return full_transcript, language_code  # Return both the transcript and detected language
 
-def summarize_with_langchain_and_openai(transcript, language_code, model_name='gpt-3.5-turbo'):
+def summarize_with_langchain_and_openai(
+    transcript, language_code, model_name="gpt-4o"):
     # Split the document if it's too long
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=0)
     texts = text_splitter.split_text(transcript)
@@ -109,7 +110,9 @@ def main():
     link = st.text_input('Enter the link of the YouTube video you want to summarize:')
 
     # add options for the model
-    model_option = st.selectbox('Select the model:', ['gpt-3.5-turbo', 'gpt-4-turbo'])
+    model_option = st.selectbox(
+        "Select the model:", ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo"]
+    )
 
     if st.button('Start'):
         if link:
@@ -124,12 +127,13 @@ def main():
                 transcript, language_code = get_transcript(link)
 
                 status_text.text(f'Creating summary...')
-                progress.progress(75)
 
                 model_name = model_option
-                summary = summarize_with_langchain_and_openai(transcript, language_code, model_name)
-
-                status_text.text('Summary:')
+                progress.progress(50)
+                summary = summarize_with_langchain_and_openai(
+                    transcript, language_code, model_name
+                )
+                st.subheader("Summary:")
                 print(summary)
                 st.markdown(summary)
                 progress.progress(100)
