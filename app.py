@@ -136,6 +136,10 @@ def main():
                 st.subheader("Summary:")
                 print(summary)
                 st.markdown(summary)
+
+                st.subheader("Transcript:")
+                st.markdown(transcript)
+
                 progress.progress(100)
             except Exception as e:
                 st.write(str(e))
